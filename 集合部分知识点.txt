@@ -1,0 +1,44 @@
+1．	fail-fast和fail-safe迭代器有什么区别？
+fail-fast是快速失败机制，fail-safe为安全失败机制
+一、	fail-fast（快速失败）
+在用迭代器遍历一个集合的对象的时候，如果在遍历过程中对集合对象的内容进行修改（增加、删除、修改），就会抛出Concurrent Modification Exception。
+原理：迭代器在遍历时直接访问集合中的内容，并且在遍历的过程中使用一个modCount变量。集合在被遍历期间如果内容发生变化就会改变madCount的值。每当迭代器使用hashNext（）、next（）遍历下一个元素之前，都会检测modCount变量是否为expectedmodCount值，是的话就返回遍历，否则就会抛出异常，终止遍历。
+注意：这里的异常抛出的条件是modCount！=expectedmodCount被检测到。如果集合发生变化时修改的modCount值刚好又设置expectedmodCount值，则异常不会抛出。如果不修改集合对象的结构只修改内容也不会抛出异常。因此不能依赖于这个异常是否抛出而进行并发的操作的编程，这个异常只建议用于检测并发修改的bug
+应用：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改）
+二、	fail-safe（安全失败）
+采用安全失败机制的集合容器，在遍历不是直接在集合内容上访问的，而是先将原有集合的内容进行复制，在拷贝的集合上进行遍历。
+原理：由于迭代时是对原来集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发Concurrent Modification Exception。
+缺点：基于拷贝内容的优点是避免了Concurrent Modification Exception，但同样的，迭代器不能访问到修改后的内容，即：迭代器遍历的是开始遍历那一刻拿到的集合拷贝，在遍历期间原集合发生的修改迭代器是不知道的。
+应用：java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改。
+2．	如何使用  Comparable  和  Comparator  接口对集合进行排序？
+Comparable:
+在被实现后，重写方法compareTo（只有一个参数），如果比较的是数字返回number-Object.number,如果比较的字符串方法返回string.equal(Object.string), 正常是按升序排列，在返回前面加个负号就可以降序排列.
+需要在另一个类是实现Comparator，同样后面也要加泛型，这个泛型是需要排序的自定义类，要重写compare方法，比较Object里面的具体属性用compareTo，需要Collections工具类的sort方法，方法里面传入两个参数：第一个参数是列表信息list，第二个参数是实现了comparator的类的对象
+
+3.HashSet和TreeSet有什么区别？
+ HashSet：
+	不能有相同的元素但是有一个元素可以是null，存入的元素是无序的；HashSet的底层是哈希表，哈希表是由hashCods()生成的
+	hashCode()和equals()方法保证唯一性；
+增加、删除的时间复杂度都是O(1)。
+	线程不安全
+TreeSet：
+	不能有相同的元素也不能有null，根据元素的自然顺序进行排序
+	其底层的数据结构是一个红黑树；
+增加、删除的时间复杂度都是O(log（n）)。
+线程不安全。
+4.解释LinkedList和ArrayList之间的区别。
+ArrayList  是 基于数组的 List接口的实现 。 ArrayList在  内部处理添加或删除元素时调整此数组的大小。你可以通过它们在数组中的索引在常量时间内访问其元素。但是，如果数组很大并且插入或移除的元素接近列表的开头，则插入或移除元素会导致移动所有后续元素，这些元素可能会很慢。
+LinkedList  是一个双向链表：将单个元素放入 节点  对象中，该节点对象具有前一个节点和下一个节点的引用 。 如果在列表的不同部分中有很多插入或删除操作，这个实现可能比 ArrayList更有效 ，特别是当列表很大时。
+8.哪些集合类是线程安全的？
+Vector、HashTable、Properties和Stack、Eenumeration是同步类，所以它们是线程安全的，可以在多线程环境下使用。Java1.5并发API包括一些集合类，允许迭代时修改，因为它们都工作在集合的克隆上，所以它们在多线程环境中是安全的。
+
+9.并发集合类是什么？
+在（java.util.concurrent）包中因为他们是实现安全失败机制的接口
+
+10.数组(Array)和列表集合(ArrayList)有什么区别
+不同点：
+	Array可以包含基本类型和对象类型，ArrayList只能包含对象类型
+	Array不可变大小固定ArrayList大小可变
+	ArrayList方法和特性比Array多。
+11.Enumeration接口和Iterator接口的区别有哪些
+ Enumeration线程安全，Iterator线程不安全。Iterator比Enumeration快，Iterator多了对数据进行删除 Enumeration没有。
