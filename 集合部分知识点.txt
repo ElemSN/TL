@@ -1,3 +1,4 @@
+概念题：
 1．	fail-fast和fail-safe迭代器有什么区别？
 fail-fast是快速失败机制，fail-safe为安全失败机制
 一、	fail-fast（快速失败）
@@ -42,3 +43,66 @@ Vector、HashTable、Properties和Stack、Eenumeration是同步类，所以它们是线程安全的
 	ArrayList方法和特性比Array多。
 11.Enumeration接口和Iterator接口的区别有哪些
  Enumeration线程安全，Iterator线程不安全。Iterator比Enumeration快，Iterator多了对数据进行删除 Enumeration没有。
+
+阅读代码题：
+1.（List）写出下面程序的运行结果
+import java.util.*;
+public class TestList{
+public static void main(String args[]){
+List list = new ArrayList();
+list.add(“Hello”);
+list.add(“World”);
+list.add(“Hello”);
+list.add(“Learn”);
+list.remove(“Hello”);
+list.remove(0);
+for(int i = 0; i<list.size(); i++){
+System.out.println(list.get(i));
+}
+}
+}
+结果是：
+Hello
+Learn
+2. （Set，List）
+import java.util.*;
+public class TestListSet{
+public static void main(String args[]){
+List list = new ArrayList();
+list.add(“Hello”);
+list.add(“Learn”);
+list.add(“Hello”);
+list.add(“Welcome”);
+Set set = new HashSet();
+set.addAll(list);
+System.out.println(set.size());
+}
+}
+选择正确答案
+A． 编译不通过
+B． 编译通过，运行时异常
+C． 编译运行都正常，输出3
+D． 编译运行都正常，输出4
+结果：c
+三、编程题
+1.集合实现约瑟夫环。
+import java.util.ArrayList;
+import java.util.List;
+public class Test2 {
+	//实现约瑟夫环
+	public static void main(String[] args) {
+		List child=new ArrayList();
+		for(int i=0;i<12;++i) {
+			child.add(i+1);
+		}
+		int j=0;
+		while(!child.isEmpty()) {
+			j+=3;
+			System.out.println(child.get(j%child.size()));
+			while(j>child.size()) {
+				j-=child.size();
+			}
+			child.remove(j%child.size());
+		}
+	}
+}
