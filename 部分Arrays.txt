@@ -1,0 +1,13 @@
+int binarySearch（type[]a,type key）:使用二分法查询key元素值在a数组中出现的索引；如果a数组不包括key元素值，则返回负数。调用该方法时要求数组中元素已经按升序排列，这样才能得到正确的结果
+int binarySearch（type[]a,int fromIndex,int toIndex,type key）:这个方法一上一个方法类似，但它只搜索a数组中fromIndex到toIndex索引的元素。调用该方法时要求数组中元素已经按升序排列这样才能得到正确结果。
+type []copyOf(type[] original,int length):这个方法将会把original复制成一个新的数组，其中length是新数组的长度。如果length小于original数组的长度，则新数组就是原数组length个元素；如果length大于original数组的长度，则新数组的前面元素就是原数组的所有元素，后面补充0（数组类型），false(boolean)，或者null（引用类型）
+type[] copyOfRange（type[]original,int from,int to）:这个方法与前面的方法类似，但是这个方法只复制了original的数组的from索引到to索引的元素
+boolean equals（type[]a1,type []a2）:如果a1数组与a2数组长度相同并且里面的数据元素也一一相同，该方法返回true否则为false
+void fill（type[]a,type val）:该方法将会把数组a的所有元素都赋值为val
+void fill (type[]a,int fromIndex,int toIndex):该方法与前一个方法相似，区别在于该方法将a数组fromIndex到toIndex的索引的元素都赋值为val
+void sort(type[]a):该方法将数组的数组元素进行排序
+void sort (type[]a,int fromIndex,int toIndex):该方法与前一个方法类似，区别是该方法仅仅将数组的fromIndex到toIndex索引的元素进行排序。
+void parallelSort(xxx[]a):该方法的功能与sort（）相似区别是该方法增加了并行能力可以利用多CPU并行来提高性能。
+void parallelSort（xxx[]a,int fromIndex,int toIndex）:该方法与前一个方法类似，区别是该方法仅仅将数组的fromIndex到toIndex索引的元素进行排序。
+String toString(type[]a):该方法将一个数组转换成一个字符串。该方法按顺序把多个数组元素连缀在一起，多个数组元素使用英文的逗号（,）和空格隔开。
+void parallelPrefix(xxx[]array,XxxBinaryOperator op):该方法使用op参数指定的计算公式计算得到的结果作为新元素。op计算公式包括left、right两个形参其中left代表数组中前一个索引处的元素，当计算第一个元素时，left值默认为1
