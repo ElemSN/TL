@@ -1,0 +1,162 @@
+﻿package java.lang;
+
+import jdk.internal.HotSpotIntrinsicCandidate;
+
+/**
+ * Object类是所有类的根
+ * 每一个类都实现了Object的方法. 所有对象包括数组都继承了他的方法.
+ *
+ * @author  unascribed
+ * @see     java.lang.Class
+ * @since   1.0
+ */
+public class Object {
+
+    private static native void registerNatives();
+    static {
+        registerNatives();
+    }
+
+    /**
+     *创建一个Object对象的空构造
+     */
+    @HotSpotIntrinsicCandidate
+    public Object() {}
+
+    
+    /**hashCode的常规协定是：
+    1.在java应用程序执行期间,在对同一对象多次调用hashCode()方法时,必须一致地返回相同的整数,前提是将对象进行equals比较时所用的信息没有被修改。从某一应用程序的一次执行到同一应用程序的另一次执行,该整数无需保持一致。
+    2.如果根据equals(object)方法,两个对象是相等的,那么对这两个对象中的每个对象调用hashCode方法都必须生成相同的整数结果。 3.如果根据equals(java.lang.Object)方法,两个对象不相等,那么对这两个对象中的任一对象上调用hashCode()方法不要求一定生成不同的整数结果。但是,程序员应该意识到,为不相等的对象生成不同整数结果可以提高哈希表的性能。
+    */
+    public native int hashCode();
+
+    /**
+     *用equals的比较方法
+	 这里比较的是对象的内存地址,跟String.equals方法不同,它比较的只是对象的值.
+     */
+    public boolean equals(Object obj) {
+        return (this == obj);
+    }
+
+    /**
+     *创建并返回此对象的副本。
+	 *（这个方法返回的对象应该是独立的
+     *这个对象（正在被克隆）。为了实现这种独立性。
+     */
+    @HotSpotIntrinsicCandidate
+    protected native Object clone() throws CloneNotSupportedException;
+
+    /**
+     *返回对象的字符串表示形式。.In general, the
+     * {@code toString} method returns a string that
+     * 建议所有子类重写此方法。
+     *返回一个由其中的类名称组成的字符串
+     * object是一个实例，符号字符'{@code @}'，并且
+     *的哈希码的无符号十六进制表示
+     *对象。 换句话说，这个方法返回的字符串等于
+     * 的价值：
+     * getClass（）.getName（）+'@'+ Integer.toHexString（hashCode（））
+     *
+     * @返回对象的字符串表示。
+     */
+    public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode());
+    }
+
+    /**
+     *唤醒正在等待该对象的单个线程显示器。如果任何线程正在等待这个对象，其中一个
+     *选择被唤醒。选择是任意的，发生在执行的自由裁量权。线程等待对象的通过调用其中一个等待方法来监视。
+     * 唤醒的线程将不能继续进行，直到当前
+     *线程放弃对该对象的锁定。觉醒的线程会
+     *以通常的方式与其他可能的线程竞争
+     *积极争取在这个对象上同步;例如，
+     *觉醒的线程在享受没有可靠的特权或劣势
+     *下一个线程来锁定这个对象。
+     * <p>
+     *此方法只能由拥有者的线程调用
+     *这个物体的监视器。一个线程成为的主人
+     * 一次只能有一个线程拥有对象的显示器。
+     *
+     *如果当前线程不是，则抛出IllegalMonitorStateException
+     */
+    @HotSpotIntrinsicCandidate
+    public final native void notify();
+
+    /**
+     *唤醒在该对象监视器上等待的所有线程。一个
+     *线程通过调用其中一个来等待对象的显示器.
+     * 唤醒的线程将无法继续进行，直到当前
+     *线程放弃对该对象的锁定。唤醒的线程
+     *将以通常的方式与其他可能的线程竞争
+     *积极争取在这个对象上同步;例如，
+     *被唤醒的线程在享受没有可靠的特权或劣势
+     *成为锁定此对象的下一个线程。
+	  此方法只能由拥有者的线程调用
+     *这个物体的监视器。请参阅{@code notify}方法一台显示器。
+     *
+     *如果当前线程不是，则抛出IllegalMonitorStateException
+     *该对象监视器的所有者。
+     */
+    @HotSpotIntrinsicCandidate
+    public final native void notifyAll();
+
+    /**
+     **导致当前线程等待，直到另一个线程调用该线程时并且用notify()\notifyAll()的方法唤醒时才能再一次开启
+	 * *将自己置于等待为这个对象设置然后放弃
+     *此对象上的任何和所有同步声明。线程<var> T </ var>
+     *因线程调度而被禁用，并处于休眠状态
+     *直到四件事中的一件发生：
+     * <1>其他一些线程为此调用了{notify}方法
+     *对象和线程<var> T </ var>恰好被任意选为
+     *被唤醒的线程。
+     * <2>其他一些线程为此调用了{notifyAll}方法
+     *对象。
+     * <3>其他一些线程{@interplain线程#interrupt（）中断}
+     *线程<var> T </ var>。
+     * <4>指定的实时时间已过，或多或少。如果
+     * {@code timeout}为零，然而，那么实时并没有被采纳
+     *考虑和线程只是等到通知。
+     * 线程<var> T </ var>然后从为此设置的等待中移除
+     *对象并重新启用线程调度。然后它在竞争中
+     *通常的方式与其他线程同步的权利
+     *对象;一旦它获得了对象的控制权，它的所有权
+     *对象上的同步声明已恢复到现状
+	 * timeout为停多长时间ms
+     */
+    public final native void wait(long timeout) throws InterruptedException;
+
+    /**
+     *在其他线程调用此对象的notify()方法或notifyAll()方法,或者超过指定的时间量前,导致当前线程等待*
+	 重载的wait方法，timeout等待时间 
+     */
+    public final void wait(long timeout, int nanos) throws InterruptedException {
+        //timeout不能小于0
+		if (timeout < 0) {
+            throw new IllegalArgumentException("timeout value is negative");
+        }
+		//nanos不能大于等于1000000ms也就是1000s
+        if (nanos < 0 || nanos > 999999) {
+            throw new IllegalArgumentException(
+                                "nanosecond timeout value out of range");
+        }
+
+        if (nanos > 0) {
+            timeout++;
+        }
+
+        wait(timeout);
+    }
+
+    /**
+	 *没有传参的wait()方法。
+     */
+    public final void wait() throws InterruptedException {
+        wait(0);
+    }
+
+    /**
+    *当垃圾回收期确定不存在对该对象的更多引用时,由对象的垃圾回收器调用此方法。
+    */
+    @Deprecated(since="9")
+    protected void finalize() throws Throwable { }
+}
