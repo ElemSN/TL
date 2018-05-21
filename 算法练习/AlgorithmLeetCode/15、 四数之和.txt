@@ -1,0 +1,64 @@
+给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？找出所有满足条件且不重复的四元组。
+
+注意：
+
+答案中不可以包含重复的四元组。
+
+示例：
+
+给定数组 nums = [1, 0, -1, 0, -2, 2]，和 target = 0。
+
+满足要求的四元组集合为：
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        if(nums.length==0 && nums.length<4)
+			return new ArrayList(res);
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-3;++i){
+            int k=target-nums[i];
+            if(i==0||(i>0&&nums[i-1]!=nums[i]))
+            threeSum(nums,k,i,res);
+        }
+        return res;
+    }
+    public void threeSum(int[] nums,int key,int j,List<List<Integer>> res){
+        for(int i=j+1;i<nums.length;++i){
+            int k=key-nums[i];
+            if(i==j+1||(i>j+1&&nums[i-1]!=nums[i])){
+                 for(int left=i+1,right=nums.length-1;left<right;){
+                     if(left>i+1&&nums[left-1]==nums[left]){
+                         left++;
+                         continue;
+                     }
+                     if(right<nums.length-1&&nums[right+1]==nums[right]){
+                         right--;
+                         continue;
+                     }
+                     if(nums[left]+nums[right]>k){
+                         right--;
+                     }
+                     else if(nums[left]+nums[right]<k){
+                         left++;
+                     }
+                     else{
+                         List<Integer> help=new ArrayList<Integer>();                       
+                         help.add(nums[j]);
+                         help.add(nums[i]);
+                         help.add(nums[left]);
+                         help.add(nums[right]);
+                         res.add(help);
+                         right--;
+                         left++;
+                     }
+                 }
+            }
+        }
+    }
+}

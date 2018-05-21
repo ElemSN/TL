@@ -1,0 +1,49 @@
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+
+注意：答案中不可以包含重复的三元组。
+
+例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+满足要求的三元组集合为：
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res=new ArrayList<List<Integer>>();
+        List<Integer> help=null;
+        for(int i=0;i<nums.length;++i){
+            int k=0-nums[i];
+            if(i==0||(i>0&&nums[i-1]!=nums[i])){
+                 for(int left=i+1,right=nums.length-1;left<right;){
+                     if(left>i+1&&nums[left-1]==nums[left]){
+                         left++;
+                         continue;
+                     }
+                     if(right<nums.length-1&&nums[right+1]==nums[right]){
+                         right--;
+                         continue;
+                     }
+                     if(nums[left]+nums[right]>k){
+                         right--;
+                     }
+                     else if(nums[left]+nums[right]<k){
+                         left++;
+                     }
+                     else{
+                         help=new ArrayList<Integer>();
+                         help.add(nums[i]);
+                         help.add(nums[left]);
+                         help.add(nums[right]);
+                         res.add(help);
+                         right--;
+                         left++;
+                     }
+                 }
+            }
+        }
+        return res;
+    }
+}
